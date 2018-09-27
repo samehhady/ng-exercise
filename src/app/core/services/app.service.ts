@@ -1,10 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
 import tasks, { Task } from '../tasks/tasks';
 
 @Injectable()
 export class AppService {
-  constructor(private sanitizer: DomSanitizer) { }
+  constructor(private sanitizer: DomSanitizer, private http:HttpClient) { }
+  loggedIn = new EventEmitter;
 
   /**
    * @author Ahsan Ayaz
@@ -25,5 +27,14 @@ export class AppService {
       updatedTask.description = this.sanitizer.bypassSecurityTrustHtml(updatedTask.description) as string;
       return Object.assign({}, task, updatedTask);
     });
+  }
+
+  getUsers() {
+    return this.http.get("https://randomuser.me/api/?results=20");
+  }
+
+  authenticated(type){
+    this.loggedIn.emit(type);
+    localStorage.setItem('authenticated', type);
   }
 }

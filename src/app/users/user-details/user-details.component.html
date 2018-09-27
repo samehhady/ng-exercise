@@ -1,0 +1,15 @@
+<div *ngIf="user" class="ng-exercise-app">
+  <div class="page-header">
+    <h1 class="heading">
+      User Details
+    </h1>
+  </div>
+  <img src="{{user['picture']}}">
+  <h2>{{user['first']}}, {{user['last']}}</h2>
+  <ul class="list">
+    {{user['email']}}<br>
+    {{user['phone']}}
+  </ul>
+  <br>
+  <button class="app-btn" (click)="goback()">Back</button>
+</div>

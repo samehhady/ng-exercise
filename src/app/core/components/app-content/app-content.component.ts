@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { User } from '../../models/user.model';
+import {Component, OnInit} from '@angular/core';
+import {User} from '../../models/user.model';
+import {AppService} from '../../services/app.service';
 
 @Component({
   selector: 'ng-e-app-content',
@@ -7,15 +8,25 @@ import { User } from '../../models/user.model';
   styleUrls: ['./app-content.component.scss']
 })
 export class AppContentComponent implements OnInit {
-  user: User = {
+  user:User = {
     firstName: 'Ahsan',
     lastName: 'Ayaz'
   };
-  isLoggedIn: boolean;
-  constructor() { }
+  isLoggedIn:boolean;
+
+  constructor(private appService:AppService) {
+  }
 
   ngOnInit() {
-    this.isLoggedIn = false;
+    this.appService.loggedIn.subscribe(
+      (action) => {
+        this.isLoggedIn = action;
+      });
+
+    var isLogged = localStorage.getItem('authenticated');
+    if (isLogged) {
+      this.isLoggedIn = (isLogged == 'true');
+    }
   }
 
   /**
@@ -24,6 +35,7 @@ export class AppContentComponent implements OnInit {
    */
   login() {
     this.isLoggedIn = true;
+    this.appService.authenticated(true);
   }
 
   /**
@@ -32,6 +44,7 @@ export class AppContentComponent implements OnInit {
    */
   logout() {
     this.isLoggedIn = false;
+    this.appService.authenticated(false);
   }
 
 }
